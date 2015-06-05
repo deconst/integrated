@@ -5,7 +5,7 @@ set -euo pipefail
 ROOT=$(cd $(dirname $0)/..; pwd)
 
 [ -f ${ROOT}/env ] || {
-  echo <<EOM 1&>2
+  cat <<EOM 1>&2
 Environment variables not found. Please copy and customize the example file:
 
   cp ${ROOT}/env.example ${ROOT}/env
