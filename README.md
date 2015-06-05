@@ -27,3 +27,13 @@ Clone this repository and `cd` into its directory. Then:
    ```
 
 `script/up` accepts any parameters that `docker-compose up` does. Notably, you can use `script/up -d` to launch services in the background.
+
+### Submitting Content
+
+Now the site is running, but you don't have any content submitted, yet. To add some, run the appropriate `script/add-*` script with the path to your clone of a local content repository.
+
+```bash
+script/add-sphinx ~/writing/drc/docs-quickstart
+
+script/add-jekyll ~/writing/drc/docs-developer-blog
+```
