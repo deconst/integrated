@@ -1,0 +1,47 @@
+---
+mongo:
+  image: mongo:2.6
+content:
+  image: quay.io/deconst/content-service
+  links:
+  - "mongo:mongo"
+  environment:
+    RACKSPACE_USERNAME:
+    RACKSPACE_APIKEY:
+    RACKSPACE_REGION:
+    CONTENT_CONTAINER:
+    ASSET_CONTAINER:
+    MONGODB_URL: mongodb://mongo:27017/content
+    CONTENT_LOG_LEVEL: DEBUG
+  ports:
+  - "9000:8080"
+mapping:
+  image: quay.io/deconst/mapping-service
+  environment:
+    CONTROL_REPO_URL:
+    CONTROL_REPO_BRANCH:
+    MAP_LOG_LEVEL: DEBUG
+  ports:
+  - "9001:8080"
+layout:
+  image: quay.io/deconst/layout-service
+  environment:
+    CONTROL_REPO_URL:
+    CONTROL_REPO_BRANCH:
+    LAYOUT_LOG_LEVEL: DEBUG
+  ports:
+  - "9002:8080"
+presenter:
+  image: quay.io/deconst/presenter
+  links:
+  - content
+  - mapping
+  - layout
+  environment:
+    CONTENT_SERVICE_URL: http://content:8080/
+    MAPPING_SERVICE_URL: http://mapping:8080/
+    LAYOUT_SERVICE_URL: http://layout:8080/
+    PRESENTED_URL_DOMAIN:
+    PRESENTER_LOG_LEVEL: DEBUG
+  ports:
+  - "80:8080"
