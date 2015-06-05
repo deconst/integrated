@@ -1,0 +1,26 @@
+#!/bin/bash
+
+set -eou pipefail
+
+ROOT=$(cd $(dirname $0)/..; pwd)
+
+[ -f ${ROOT}/env ] && source ${ROOT}/env
+
+WORKDIR=${1:-${CONTROL_REPO_PATH}}
+
+DECONST=$(boot2docker ip)
+
+# Acquire an API key.
+export CONTENT_STORE_APIKEY=$(curl -s \
+  -X POST \
+  -H 'Authorization: deconst apikey="111111111111111111111111111"' \
+  http://${DECONST}:9000/keys?named=assets |
+  python -c 'import sys, json; print json.load(sys.stdin)["apikey"]')
+
+exec docker run \
+  --rm=true \
+  -e CONTENT_STORE_URL=http://${DECONST}:9000/ \
+  -e CONTENT_STORE_APIKEY=${CONTENT_STORE_APIKEY} \
+  -e TRAVIS_PULL_REQUEST="false" \
+  -v ${WORKDIR}:/usr/control-repo \
+  quay.io/deconst/preparer-asset

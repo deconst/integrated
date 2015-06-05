@@ -37,3 +37,11 @@ script/add-sphinx ~/writing/drc/docs-quickstart
 
 script/add-jekyll ~/writing/drc/docs-developer-blog
 ```
+
+#### Assets
+
+To publish assets to the CDN from your control repository, run:
+
+```bash
+script/add-assets
+```
