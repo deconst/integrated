@@ -19,9 +19,9 @@ content:
 mapping:
   image: quay.io/deconst/mapping-service
   environment:
-    CONTROL_REPO_URL: /var/control-repo
-    CONTROL_REPO_BRANCH:
+    CONTROL_REPO_DIR: /var/control-repo
     MAP_LOG_LEVEL: DEBUG
+    MAP_DEVELOPMENT_MODE: "true"
   ports:
   - "9001:8080"
   volumes:
@@ -29,9 +29,9 @@ mapping:
 layout:
   image: quay.io/deconst/layout-service
   environment:
-    CONTROL_REPO_URL: /var/control-repo
-    CONTROL_REPO_BRANCH:
+    CONTROL_REPO_DIR: /var/control-repo
     LAYOUT_LOG_LEVEL: DEBUG
+    LAYOUT_DEVELOPMENT_MODE: "true"
   ports:
   - "9002:8080"
   volumes:
