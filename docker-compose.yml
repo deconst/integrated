@@ -42,11 +42,20 @@ presenter:
   - content
   - mapping
   - layout
+  - devassets
   environment:
     CONTENT_SERVICE_URL: http://content:8080/
     MAPPING_SERVICE_URL: http://mapping:8080/
     LAYOUT_SERVICE_URL: http://layout:8080/
+    DEVASSETS_URL: http://devassets:8080/
     PRESENTED_URL_DOMAIN:
     PRESENTER_LOG_LEVEL: DEBUG
   ports:
   - "80:8080"
+devassets:
+    image: nginx:latest
+    expose:
+        - "8080"
+    volumes:
+        - "./conf/sendfile.conf:/etc/nginx/conf.d/sendfile.conf"
+        - "${CONTROL_REPO_PATH}/assets:/var/local-assets"
