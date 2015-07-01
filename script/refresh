@@ -17,4 +17,14 @@ EOM
 
 source ${ROOT}/env
 
+if [ -d "${CONTROL_REPO_PATH}/node_modules/grunt-deconst-assets" ]; then
+    cd ${CONTROL_REPO_PATH}
+    TRAVIS_PULL_REQUEST=false \
+    CONTENT_STORE_URL=http://$(boot2docker ip):9000 \
+    CONTENT_STORE_APIKEY=${ADMIN_APIKEY} \
+    grunt deconst_assets
+
+    cd ${ROOT}
+fi
+
 exec docker-compose restart presenter $*

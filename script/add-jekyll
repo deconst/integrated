@@ -12,8 +12,10 @@ EOM
   exit 1
 }
 
+ROOT=$(cd $(dirname $0)/..; pwd)
+source ${ROOT}/env
+
 DECONST=$(boot2docker ip)
-ADMIN_APIKEY=${ADMIN_APIKEY}
 
 # Acquire an API key.
 export CONTENT_STORE_APIKEY=$(curl -s \
