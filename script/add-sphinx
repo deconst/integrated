@@ -17,7 +17,7 @@ DECONST=$(boot2docker ip)
 # Acquire an API key.
 export CONTENT_STORE_APIKEY=$(curl -s \
   -X POST \
-  -H 'Authorization: deconst apikey="111111111111111111111111111"' \
+  -H "Authorization: deconst apikey=\"${ADMIN_APIKEY}\"" \
   http://${DECONST}:9000/keys?named=sphinx |
   python -c 'import sys, json; print json.load(sys.stdin)["apikey"]')
 
