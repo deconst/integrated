@@ -9,44 +9,24 @@ content:
     RACKSPACE_USERNAME:
     RACKSPACE_APIKEY:
     RACKSPACE_REGION:
-    ADMIN_APIKEY: 111111111111111111111111111
+    ADMIN_APIKEY:
     CONTENT_CONTAINER:
     ASSET_CONTAINER:
     MONGODB_URL: mongodb://mongo:27017/content
     CONTENT_LOG_LEVEL: DEBUG
   ports:
   - "9000:8080"
-mapping:
-  image: quay.io/deconst/mapping-service
-  environment:
-    CONTROL_REPO_DIR: /var/control-repo
-    MAP_LOG_LEVEL: DEBUG
-    MAP_DEVELOPMENT_MODE: "true"
-  ports:
-  - "9001:8080"
-  volumes:
-  - "${CONTROL_REPO_PATH}:/var/control-repo"
-layout:
-  image: quay.io/deconst/layout-service
-  environment:
-    CONTROL_REPO_DIR: /var/control-repo
-    LAYOUT_LOG_LEVEL: DEBUG
-    LAYOUT_DEVELOPMENT_MODE: "true"
-  ports:
-  - "9002:8080"
-  volumes:
-  - "${CONTROL_REPO_PATH}:/var/control-repo"
 presenter:
   image: quay.io/deconst/presenter
   links:
   - content
-  - mapping
-  - layout
   environment:
+    CONTROL_REPO_PATH: /var/control-repo
     CONTENT_SERVICE_URL: http://content:8080/
-    MAPPING_SERVICE_URL: http://mapping:8080/
-    LAYOUT_SERVICE_URL: http://layout:8080/
+    PRESENTED_URL_PROTO:
     PRESENTED_URL_DOMAIN:
     PRESENTER_LOG_LEVEL: DEBUG
   ports:
   - "80:8080"
+  volumes:
+  - "${CONTROL_REPO_PATH}:/var/control-repo"
