@@ -12,6 +12,9 @@ EOM
   exit 1
 }
 
+ROOT=$(cd $(dirname $0)/..; pwd)
+source ${ROOT}/env
+
 DECONST=$(boot2docker ip)
 
 # Acquire an API key.
