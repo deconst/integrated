@@ -24,30 +24,11 @@ export CONTENT_STORE_APIKEY=$(curl -s \
   http://${DECONST}:9000/keys?named=sphinx |
   python -c 'import sys, json; print json.load(sys.stdin)["apikey"]')
 
-# Run the Sphinx builder (from a Docker container) on the provided content repository.
-export CONTENT_ID_BASE=${CONTENT_ID_BASE:-}
-
-[ -z "${CONTENT_ID_BASE}" ] && {
-  REMOTE="upstream"
-  (cd ${1}; git remote show ${REMOTE} >/dev/null 2>&1) || REMOTE="origin"
-
-  # This is a giant hack to guess the content ID base from the origin remote.
-  export CONTENT_ID_BASE=$(cd ${1};
-    git remote show ${REMOTE} |
-    grep 'Fetch URL' |
-    sed -e 's/^ *Fetch URL: *//g' |
-    sed -e 's/^git@/https:\/\//g' |
-    sed -e 's/github\.com:/github.com\//g' |
-    sed -e 's/\.git$/\//g')
-}
-
-echo "Submitting content with content ID base: ${CONTENT_ID_BASE}"
-
 exec docker run \
   --rm=true \
   -e CONTENT_STORE_URL=http://${DECONST}:9000/ \
   -e CONTENT_STORE_APIKEY=${CONTENT_STORE_APIKEY} \
-  -e CONTENT_ID_BASE=${CONTENT_ID_BASE} \
+  -e CONTENT_ID_BASE=${CONTENT_ID_BASE:-} \
   -e TRAVIS_PULL_REQUEST="false" \
   -v ${1}:/usr/control-repo \
   quay.io/deconst/preparer-sphinx
