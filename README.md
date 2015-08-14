@@ -20,7 +20,7 @@ Clone this repository and `cd` into the `integrated` directory. Then:
 
 1. Customize your credentials and other settings. The `env`
 settings require knowing your Rackspace Cloud account info
-and also where you intend to clone the control repo, for example..
+and also where you intend to clone the control repo, for example.
   ```bash
   
   cp env.example env
