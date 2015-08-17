@@ -16,7 +16,7 @@ Run `boot2docker up` and then `$(boot2docker shellinit)` in each shell you'll us
 
 ### Getting Started
 
-Clone this repository and `cd` into the `integrated` directory. Then:
+Clone this repository and `cd` into the directory where you cloned the repo. Then:
 
 1. Customize your credentials and other settings. The `env`
 settings require knowing your Rackspace Cloud account info
