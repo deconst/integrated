@@ -10,23 +10,31 @@
  * Install a recent version of [Docker](https://docs.docker.com/installation/#installation) for your platform.
  * Install [docker-compose](https://docs.docker.com/compose/install/). In addition to the `curl` command they list, you can also install it from [homebrew](http://brew.sh/) or [pip](https://pypi.python.org/pypi/docker-compose/1.3.0rc1).
 
-If you're using `boot2docker` on a Mac or Windows, you'll need to make sure that it's running, first. Run `boot2docker up` and then `$(boot2docker shellinit)` in each shell you'll use to interact with Docker.
+If you're using `boot2docker` on a Mac or Windows, you'll need to make sure that it's running, first. Run `boot2docker init` on first run. 
+
+Run `boot2docker up` and then `$(boot2docker shellinit)` in each shell you'll use to interact with Docker.
 
 ### Getting Started
 
-Clone this repository and `cd` into its directory. Then:
+Clone this repository and `cd` into the directory where you cloned the repo. Then:
 
-1. Customize your credentials and other settings.
+1. Customize your credentials and other settings. The `env`
+settings require knowing your Rackspace Cloud account info
+and also where you intend to clone the control repo, for example.
   ```bash
-  cd env.example env
-  ${EDITOR} env
+  
+  cp env.example env
+  vi env
   ```
 2. Launch the services.
-   ```bash
+   `` bash
+
    script/up
    ```
 
 `script/up` accepts any parameters that `docker-compose up` does. Notably, you can use `script/up -d` to launch services in the background.
+
+
 
 ### Submitting Content
 
