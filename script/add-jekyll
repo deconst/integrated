@@ -31,7 +31,6 @@ exec docker run \
   --rm=true \
   -e CONTENT_STORE_URL=http://${DECONST}:9000/ \
   -e CONTENT_STORE_APIKEY=${CONTENT_STORE_APIKEY} \
-  -e CONTENT_ID_BASE=${CONTENT_ID_BASE:-} \
   -e TRAVIS_PULL_REQUEST="false" \
   -v ${1}:/usr/control-repo \
   quay.io/deconst/preparer-jekyll
