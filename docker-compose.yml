@@ -6,6 +6,7 @@ content:
   links:
   - "mongo:mongo"
   environment:
+    STORAGE:
     RACKSPACE_USERNAME:
     RACKSPACE_APIKEY:
     RACKSPACE_REGION:
@@ -14,6 +15,7 @@ content:
     ASSET_CONTAINER:
     MONGODB_URL: mongodb://mongo:27017/content
     CONTENT_LOG_LEVEL: DEBUG
+    CONTENT_LOG_COLOR: "true"
   ports:
   - "9000:8080"
 presenter:
@@ -22,13 +24,16 @@ presenter:
   - content
   environment:
     CONTROL_REPO_PATH: /var/control-repo
+    CONTROL_REPO_URL:
+    CONTROL_REPO_BRANCH:
     CONTENT_SERVICE_URL: http://content:8080/
+    PRESENTER_DIAGNOSTICS: "true"
     PRESENTED_URL_PROTO:
     PRESENTED_URL_DOMAIN:
     PRESENTER_LOG_LEVEL: DEBUG
     PRESENTER_DEVMODE:
     PRESENTER_LIVERELOAD:
+    PRESENTER_LOG_JSON: "false"
+    PRESENTER_LOG_COLOR: "true"
   ports:
   - "80:8080"
-  volumes:
-  - "${CONTROL_REPO_PATH}:/var/control-repo"
