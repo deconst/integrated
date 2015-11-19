@@ -4,6 +4,10 @@ set -euo pipefail
 
 ROOT=$(cd $(dirname $0)/..; pwd)
 
+DOCKER_MACHINE_NAME=${DOCKER_MACHINE_NAME:-dev}
+
+DECONST=$(docker-machine ip ${DOCKER_MACHINE_NAME})
+
 [ -f ${ROOT}/env ] || {
   cat <<EOM 1>&2
 Environment variables not found. Please copy and customize the example file:
@@ -19,12 +23,10 @@ source ${ROOT}/env
 
 if [ -d "${CONTROL_REPO_PATH}/node_modules/grunt-deconst-assets" ]; then
     cd ${CONTROL_REPO_PATH}
-    TRAVIS_PULL_REQUEST=false \
-    CONTENT_STORE_URL=http://$(boot2docker ip):9000 \
-    CONTENT_STORE_APIKEY=${ADMIN_APIKEY} \
+    export TRAVIS_PULL_REQUEST=false
+    export CONTENT_STORE_URL=http://${DECONST}:9000
+    export CONTENT_STORE_APIKEY=${ADMIN_APIKEY}
     ${CONTROL_REPO_ASSETS_TASK}
 
     cd ${ROOT}
 fi
-
-exec docker-compose restart presenter $*

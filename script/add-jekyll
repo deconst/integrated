@@ -15,7 +15,9 @@ EOM
 ROOT=$(cd $(dirname $0)/..; pwd)
 source ${ROOT}/env
 
-DECONST=$(boot2docker ip)
+DOCKER_MACHINE_NAME=${DOCKER_MACHINE_NAME:-dev}
+
+DECONST=$(docker-machine ip ${DOCKER_MACHINE_NAME})
 
 # Acquire an API key.
 export CONTENT_STORE_APIKEY=$(curl -s \
@@ -29,7 +31,6 @@ exec docker run \
   --rm=true \
   -e CONTENT_STORE_URL=http://${DECONST}:9000/ \
   -e CONTENT_STORE_APIKEY=${CONTENT_STORE_APIKEY} \
-  -e CONTENT_ID_BASE=${CONTENT_ID_BASE:-} \
   -e TRAVIS_PULL_REQUEST="false" \
   -v ${1}:/usr/control-repo \
   quay.io/deconst/preparer-jekyll
