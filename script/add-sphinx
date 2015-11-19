@@ -17,7 +17,7 @@ source ${ROOT}/env
 
 DOCKER_MACHINE_NAME=${DOCKER_MACHINE_NAME:-dev}
 
-DECONST=$(docker-machine env ${DOCKER_MACHINE_NAME})
+DECONST=$(docker-machine ip ${DOCKER_MACHINE_NAME})
 
 # Acquire an API key.
 export CONTENT_STORE_APIKEY=$(curl -s \
