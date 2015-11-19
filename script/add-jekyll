@@ -15,7 +15,9 @@ EOM
 ROOT=$(cd $(dirname $0)/..; pwd)
 source ${ROOT}/env
 
-DECONST=$(boot2docker ip)
+DOCKER_MACHINE_NAME=${DOCKER_MACHINE_NAME:-dev}
+
+DECONST=$(docker-machine env ${DOCKER_MACHINE_NAME})
 
 # Acquire an API key.
 export CONTENT_STORE_APIKEY=$(curl -s \
