@@ -27,7 +27,7 @@ and also where you intend to clone the control repo, for example.
   vi env
   ```
 2. Launch the services.
-   `` bash
+   ```bash
 
    script/up
    ```
