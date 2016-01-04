@@ -35,6 +35,47 @@ and also where you intend to clone the control repo, for example.
 `script/up` accepts any parameters that `docker-compose up` does. Notably, you can use `script/up -d` to launch services in the background.
 
 
+### Alternatively, you can manually run each docker container with:
+
+```bash
+# generate an API key for the content service
+APIKEY=$(hexdump -v -e '1/1 "%.2x"' -n 128 /dev/random)
+echo "Content Service Admin API Key:" $APIKEY
+
+# startup content service dependencies
+docker run -d --name elasticsearch elasticsearch:1.7
+docker run -d --name mongo mongo:2.6
+
+# build and deploy the content service
+cd {wherever you have the deconst/content-service}
+docker build --tag content-service:1.0.0 .
+docker run -d -p 9000:8080 \
+              -e NODE_ENV=development \
+              -e STORAGE=memory \
+              -e MONGODB_URL=mongodb://mongo:27017/content \
+              -e ELASTICSEARCH_HOST=http://elasticsearch:9200/ \
+              -e ADMIN_APIKEY=$APIKEY \
+              --link mongo:mongo \
+              --link elasticsearch:elasticsearch \
+              --name content \
+              content-service:1.0.0 script/inside/dev
+
+# build and deploy the presenter service
+cd {wherever you have the deconst/presenter}
+docker build --tag presenter-service:1.0.0 .
+docker run -d -p 80:8080 \
+              -e NODE_ENV=development \
+              -e CONTROL_REPO_PATH=/var/control-repo \
+              -e CONTROL_REPO_URL=https://github.com/j12y/nexus-control.git \
+              -e CONTROL_REPO_BRANCH=setup_howtos \
+              -e CONTENT_SERVICE_URL=http://content:8080 \
+              -e PRESENTED_URL_PROTO=http \
+              -e PRESENTED_URL_DOMAIN=support.rackspace.com \
+              --link content \
+              --name presenter \
+              presenter-service:1.0.0 script/dev
+```
+
 
 ### Submitting Content
 
