@@ -1,0 +1,43 @@
+#!/bin/bash
+
+set -eou pipefail
+
+ROOT=$(cd $(dirname $0)/..; pwd)
+source ${ROOT}/env
+
+DOCKER_MACHINE_NAME=${DOCKER_MACHINE_NAME:-dev}
+DECONST=$(docker-machine ip ${DOCKER_MACHINE_NAME})
+
+CONTENT_STORE_URL=http://${DECONST}:9000/
+
+if [ ${1:-} = "--stage" ] || [ ${1:-} = "-s" ]; then
+  CONTENT_STORE_URL=http://${DECONST}:9001/
+  shift
+fi
+
+if [ -z "${1:-}" ]; then
+  cat <<EOM 1>&2
+Usage: script/add-assets [--stage|-s] <path>
+
+ --stage|-s - Submit assets to the staging endpoint.
+ path - Path to a Deconst control repository.
+
+EOM
+  exit 1
+fi
+
+# Acquire an API key.
+export CONTENT_STORE_APIKEY=$(curl -s \
+  -X POST \
+  -H "Authorization: deconst apikey=\"${ADMIN_APIKEY}\"" \
+  ${CONTENT_STORE_URL}keys?named=asset |
+  python -c 'import sys, json; print json.load(sys.stdin)["apikey"]')
+
+# Run the asset preparer from a Docker container on the provided control repository.
+exec docker run \
+  --rm=true \
+  -e CONTENT_STORE_URL=${CONTENT_STORE_URL} \
+  -e CONTENT_STORE_APIKEY=${CONTENT_STORE_APIKEY} \
+  -e TRAVIS_PULL_REQUEST="false" \
+  -v ${1}:/var/control-repo \
+  quay.io/deconst/preparer-asset
