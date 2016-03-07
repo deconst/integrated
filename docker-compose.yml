@@ -58,7 +58,6 @@ services:
       ASSET_CONTAINER: "staging-${ASSET_CONTAINER}"
       MONGODB_URL: mongodb://mongo:27017/content
       MONGODB_PREFIX: staging_
-      ELASTICSEARCH_HOST: http://elasticsearch:9200/
       CONTENT_LOG_LEVEL: debug
       CONTENT_LOG_COLOR: "true"
       PROXY_UPSTREAM: http://content:8080/
