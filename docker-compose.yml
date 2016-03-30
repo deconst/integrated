@@ -21,9 +21,6 @@ services:
       ELASTICSEARCH_HOST: http://elasticsearch:9200/
       CONTENT_LOG_LEVEL: debug
       CONTENT_LOG_COLOR: "true"
-    depends_on:
-    - mongo
-    - elasticsearch
   presenter:
     image: quay.io/deconst/presenter
     ports:
@@ -41,8 +38,6 @@ services:
       PRESENTER_LIVERELOAD:
       PRESENTER_LOG_JSON: "false"
       PRESENTER_LOG_COLOR: "true"
-    depends_on:
-    - content
   staging_content:
     image: quay.io/deconst/content-service
     ports:
@@ -62,10 +57,6 @@ services:
       CONTENT_LOG_COLOR: "true"
       PROXY_UPSTREAM: http://content:8080/
       STAGING_MODE: "true"
-    depends_on:
-    - mongo
-    - elasticsearch
-    - content
   staging_presenter:
     image: quay.io/deconst/presenter
     ports:
@@ -84,5 +75,3 @@ services:
       PRESENTER_LOG_JSON: "false"
       PRESENTER_LOG_COLOR: "true"
       STAGING_MODE: "true"
-    depends_on:
-    - staging_content
