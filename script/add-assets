@@ -17,10 +17,10 @@ fi
 
 if [ -z "${1:-}" ]; then
   cat <<EOM 1>&2
-Usage: script/add-sphinx [--stage|-s] <path>
+Usage: script/add-assets [--stage|-s] <path>
 
- --stage|-s - Submit content to the staging endpoint.
- path - Path to a Sphinx content repository.
+ --stage|-s - Submit assets to the staging endpoint.
+ path - Path to a Deconst control repository.
 
 EOM
   exit 1
@@ -30,19 +30,14 @@ fi
 export CONTENT_STORE_APIKEY=$(curl -s \
   -X POST \
   -H "Authorization: deconst apikey=\"${ADMIN_APIKEY}\"" \
-  ${CONTENT_STORE_URL}keys?named=sphinx |
+  ${CONTENT_STORE_URL}keys?named=asset |
   python -c 'import sys, json; print json.load(sys.stdin)["apikey"]')
 
-# If a custom CONTENT_ID_BASE is set in the environment, use it.
-CONTENT_ID_ARG=
-[ -n "${CONTENT_ID_BASE:-}" ] && CONTENT_ID_ARG="-e CONTENT_ID_BASE=${CONTENT_ID_BASE}"
-
-# Run the Sphinx builder (from a Docker container) on the provided content repository.
+# Run the asset preparer from a Docker container on the provided control repository.
 exec docker run \
   --rm=true \
   -e CONTENT_STORE_URL=${CONTENT_STORE_URL} \
   -e CONTENT_STORE_APIKEY=${CONTENT_STORE_APIKEY} \
   -e TRAVIS_PULL_REQUEST="false" \
-  ${CONTENT_ID_ARG} \
-  -v ${1}:/usr/content-repo \
-  quay.io/deconst/preparer-sphinx
+  -v ${1}:/var/control-repo \
+  quay.io/deconst/preparer-asset
