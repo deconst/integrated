@@ -29,7 +29,7 @@ fi
 # Acquire an API key.
 export CONTENT_STORE_APIKEY=$(curl -s \
   -X POST \
-  -H "Authorization: deconst apikey=\"${ADMIN_APIKEY}\"" \
+  -H "Authorization: deconst ${ADMIN_APIKEY}" \
   ${CONTENT_STORE_URL}keys?named=sphinx |
   python -c 'import sys, json; print json.load(sys.stdin)["apikey"]')
 
