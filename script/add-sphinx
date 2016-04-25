@@ -10,7 +10,7 @@ DECONST=$(docker-machine ip ${DOCKER_MACHINE_NAME})
 
 CONTENT_STORE_URL=http://${DECONST}:9000/
 
-if [ ${1:-} = "--stage" ] || [ ${1:-} = "-s" ]; then
+if [ "${1:-}" = "--stage" ] || [ "${1:-}" = "-s" ]; then
   CONTENT_STORE_URL=http://${DECONST}:9001/
   shift
 fi
