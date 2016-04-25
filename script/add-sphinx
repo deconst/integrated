@@ -33,16 +33,18 @@ export CONTENT_STORE_APIKEY=$(curl -s \
   ${CONTENT_STORE_URL}keys?named=sphinx |
   python -c 'import sys, json; print json.load(sys.stdin)["apikey"]')
 
-# If a custom CONTENT_ID_BASE is set in the environment, use it.
-CONTENT_ID_ARG=
-[ -n "${CONTENT_ID_BASE:-}" ] && CONTENT_ID_ARG="-e CONTENT_ID_BASE=${CONTENT_ID_BASE}"
+# If a custom CONTENT_ID_BASE is set in the environment, use it. Otherwise, read it from your
+# _deconst.json file.
+if [ -z "${CONTENT_ID_BASE:-}" ]; then
+  CONTENT_ID_BASE=$(python -c "import json; print json.load(open('${1}/_deconst.json'))['contentIDBase']")
+fi
 
 # Run the Sphinx builder (from a Docker container) on the provided content repository.
 docker run \
   --rm=true \
   -e ENVELOPE_DIR=/usr/content-repo/_build/deconst-envelopes \
   -e ASSET_DIR=/usr/content-repo/_build/deconst-assets \
-  ${CONTENT_ID_ARG} \
+  -e CONTENT_ID_BASE=${CONTENT_ID_BASE} \
   -v ${1}:/usr/content-repo \
   quay.io/deconst/preparer-sphinx
 
@@ -53,6 +55,6 @@ docker run \
   -e ASSET_DIR=/usr/content-repo/_build/deconst-assets \
   -e CONTENT_SERVICE_URL=${CONTENT_STORE_URL} \
   -e CONTENT_SERVICE_APIKEY=${CONTENT_STORE_APIKEY} \
-  ${CONTENT_ID_ARG} \
+  -e CONTENT_ID_BASE=${CONTENT_ID_BASE} \
   -v ${1}:/usr/content-repo \
   quay.io/deconst/submitter
