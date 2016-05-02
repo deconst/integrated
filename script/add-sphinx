@@ -39,7 +39,7 @@ if [ -z "${CONTENT_ID_BASE:-}" ]; then
   CONTENT_ID_BASE=$(python -c "import json; print json.load(open('${1}/_deconst.json'))['contentIDBase']")
 fi
 
-# Derive CONTENT_ROOT.
+# Derive CONTAINER_ROOT.
 if [ -z "${CONTAINER_ROOT:-}" ]; then
   CONTAINER_ROOT="$(cd ${1} && git rev-parse --show-toplevel)"
 fi
