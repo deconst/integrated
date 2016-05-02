@@ -44,8 +44,6 @@ if [ -z "${CONTAINER_ROOT:-}" ]; then
   CONTAINER_ROOT="$(cd ${1} && git rev-parse --show-toplevel)"
 fi
 
-VOLUME_ARGS="-e CONTENT_ROOT=${1} -v ${CONTAINER_ROOT}:${CONTAINER_ROOT}"
-
 # Run the Sphinx builder (from a Docker container) on the provided content repository.
 docker run \
   --rm=true \
