@@ -29,6 +29,8 @@ apikey() {
     exit 1
   }
 
+  [ -n "${APIKEY:-}" ] && return 0
+
   local ENDPOINT="http://${DECONST_HOST}:9000"
   [ -n "${STAGING}" ] && ENDPOINT="http://${DECONST_HOST}:9001"
 
