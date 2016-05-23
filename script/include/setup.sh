@@ -1,6 +1,8 @@
 #!/bin/bash
 
-export COMPOSE_NAME="${COMPOSE_PROJECT_NAME:$(basename ${ROOT})}"
+export COMPOSE_NAME="${COMPOSE_PROJECT_NAME:-$(basename ${ROOT})}"
+COMPOSE_NAME=${COMPOSE_NAME//[^a-z0-9]}
+
 export COMPOSE_NETWORK_NAME="${COMPOSE_NAME}_default"
 export PROD_CONTENT_NAME="${COMPOSE_NAME}_content_1"
 export STAGING_CONTENT_NAME="${COMPOSE_NAME}_staging_content_1"
