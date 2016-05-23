@@ -40,8 +40,8 @@ apikey() {
     ${ENDPOINT}/keys?named=${KEYNAME} |
     python -c 'import sys, json; print json.load(sys.stdin)["apikey"]')
 
-  [ -z "${APIKEY:-} " ] && {
+  if [ -z "${APIKEY:-}" ]; then
     echo "Unable to issue an API key." >&2
     exit 1
-  }
+  fi
 }
