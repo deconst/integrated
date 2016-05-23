@@ -4,15 +4,16 @@ set -eou pipefail
 
 ROOT=$(cd $(dirname $0)/..; pwd)
 source ${ROOT}/env
+source ${ROOT}/include/setup.sh
 
-DOCKER_MACHINE_NAME=${DOCKER_MACHINE_NAME:-dev}
-DECONST=$(docker-machine ip ${DOCKER_MACHINE_NAME})
+STAGING=
 
-CONTENT_STORE_URL=http://${DECONST}:9000/
-
-if [ "${1:-}" = "--stage" ] || [ "${1:-}" = "-s" ]; then
-  CONTENT_STORE_URL=http://${DECONST}:9001/
+if [ ${1:-} = "--stage" ] || [ ${1:-} = "-s" ]; then
+  STAGING=yes
+  CONTENT_URL=${STAGING_CONTENT_URL}
   shift
+else
+  CONTENT_URL=${PROD_CONTENT_URL}
 fi
 
 if [ -z "${1:-}" ]; then
@@ -27,11 +28,7 @@ EOM
 fi
 
 # Acquire an API key.
-export CONTENT_STORE_APIKEY=$(curl -s \
-  -X POST \
-  -H "Authorization: deconst ${ADMIN_APIKEY}" \
-  ${CONTENT_STORE_URL}keys?named=jekyll |
-  python -c 'import sys, json; print json.load(sys.stdin)["apikey"]')
+apikey jekyll ${STAGING}
 
 # If a custom CONTENT_ID_BASE is set in the environment, use it. Otherwise, read it from your
 # _deconst.json file.
@@ -60,8 +57,8 @@ docker run \
   --rm=true \
   -e ENVELOPE_DIR=${CONTAINER_ROOT}/_site/deconst-envelopes \
   -e ASSET_DIR=${CONTAINER_ROOT}/_site/deconst-assets \
-  -e CONTENT_SERVICE_URL=${CONTENT_STORE_URL} \
-  -e CONTENT_SERVICE_APIKEY=${CONTENT_STORE_APIKEY} \
+  -e CONTENT_SERVICE_URL=${CONTENT_URL} \
+  -e CONTENT_SERVICE_APIKEY=${APIKEY} \
   -e CONTENT_ID_BASE=${CONTENT_ID_BASE} \
   -e VERBOSE=${VERBOSE:-} \
   -e CONTENT_ROOT=${1} \
