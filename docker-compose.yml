@@ -26,7 +26,7 @@ services:
     ports:
     - "80:8080"
     environment:
-      CONTROL_REPO_PATH: /tmp/control-repo
+      CONTROL_REPO_PATH:
       CONTROL_REPO_URL:
       CONTROL_REPO_BRANCH:
       CONTENT_SERVICE_URL: http://content:8080/
@@ -38,6 +38,8 @@ services:
       PRESENTER_LIVERELOAD:
       PRESENTER_LOG_JSON: "false"
       PRESENTER_LOG_COLOR: "true"
+    volumes:
+    - "${CONTROL_REPO_HOST_PATH}:${CONTROL_REPO_PATH}"
   staging_content:
     image: quay.io/deconst/content-service
     ports:
@@ -62,7 +64,7 @@ services:
     ports:
     - "81:8080"
     environment:
-      CONTROL_REPO_PATH: /tmp/control-repo
+      CONTROL_REPO_PATH:
       CONTROL_REPO_URL:
       CONTROL_REPO_BRANCH:
       CONTENT_SERVICE_URL: http://staging_content:8080/
@@ -75,3 +77,5 @@ services:
       PRESENTER_LOG_JSON: "false"
       PRESENTER_LOG_COLOR: "true"
       STAGING_MODE: "true"
+    volumes:
+    - "${CONTROL_REPO_HOST_PATH}:${CONTROL_REPO_PATH}"
