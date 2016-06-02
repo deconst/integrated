@@ -17,6 +17,7 @@ services:
       ADMIN_APIKEY:
       CONTENT_CONTAINER:
       ASSET_CONTAINER:
+      MEMORY_ASSET_PREFIX:
       MONGODB_URL: mongodb://mongo:27017/content
       ELASTICSEARCH_HOST: http://elasticsearch:9200/
       CONTENT_LOG_LEVEL: debug
@@ -53,6 +54,7 @@ services:
       ADMIN_APIKEY:
       CONTENT_CONTAINER: "staging-${CONTENT_CONTAINER}"
       ASSET_CONTAINER: "staging-${ASSET_CONTAINER}"
+      MEMORY_ASSET_PREFIX: "${STAGING_MEMORY_ASSET_PREFIX}"
       MONGODB_URL: mongodb://mongo:27017/content
       MONGODB_PREFIX: staging_
       CONTENT_LOG_LEVEL: debug
