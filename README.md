@@ -8,6 +8,11 @@
 ### Prerequisites
 
  * Install a recent version of [Docker](https://docs.docker.com/installation/#installation) for your platform.
+ 
+If you are on MacOS, stop here and go to [Getting Started](#getting-started).
+ 
+If you are on Windows or Linux, continue:
+ 
  * Install [docker-compose](https://docs.docker.com/compose/install/). In addition to the `curl` command they list, you can also install it from [homebrew](http://brew.sh/) or [pip](https://pypi.python.org/pypi/docker-compose/1.3.0rc1).
 
 Make sure that docker-machine is create and running first.
@@ -23,13 +28,13 @@ Run `eval $(docker-machine env default)` in each shell you'll use to interact wi
 Clone this repository and `cd` into the directory where you cloned the repo. Then:
 
 1. Customize your credentials and other settings. The `env`
-settings require knowing your Rackspace Cloud account info
-and also where you intend to clone the control repo, for example.
-  ```bash
-  cp env.example env
-  ${EDITOR} env
-  ```
-2. Launch the services.
+   settings require knowing your Rackspace Cloud account info
+   and also where you intend to clone the control repo, for example.
+    ```bash
+    cp env.example env
+    ${EDITOR} env
+    ```
+1. Launch the services.
    ```bash
    script/up
    ```
