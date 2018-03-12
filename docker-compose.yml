@@ -3,7 +3,7 @@ services:
   mongo:
     image: mongo:2.6
   elasticsearch:
-    image: elasticsearch:1.7
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.2.1
   content:
     image: quay.io/deconst/content-service
     ports:
