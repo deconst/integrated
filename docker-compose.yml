@@ -1,7 +1,7 @@
 version: '2'
 services:
   mongo:
-    image: mongo:2.6
+    image: mongo:3.6
   elasticsearch:
     image: elasticsearch:1.7
   content:
