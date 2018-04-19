@@ -33,13 +33,23 @@ apikey jekyll ${STAGING}
 # If a custom CONTENT_ID_BASE is set in the environment, use it. Otherwise, read it from your
 # _deconst.json file.
 if [ -z "${CONTENT_ID_BASE:-}" ]; then
-  CONTENT_ID_BASE=$(python -c "import json; print json.load(open('${1}/_deconst.json'))['contentIDBase']")
+  if  [ "$PYVER" -eq "3" ]; then
+    CONTENT_ID_BASE=$(python -c "import json; print(json.loads(open('${1}/_deconst.json').read())['contentIDBase'])")
+  else
+    CONTENT_ID_BASE=$(python -c "import json; print json.load(open('${1}/_deconst.json'))['contentIDBase']")
+  fi
 fi
 
 # Derive CONTAINER_ROOT.
 if [ -z "${CONTAINER_ROOT:-}" ]; then
   CONTAINER_ROOT="$(cd ${1} && git rev-parse --show-toplevel)"
 fi
+
+# Add visibility to endpoints being called
+echo "CONTENT_ID_BASE | ${CONTENT_ID_BASE}"
+echo "CONTAINER_ROOT | ${CONTAINER_ROOT}"
+echo "CONTENT_URL | ${CONTENT_URL}"
+echo "COMPOSE_NETWORK_NAME | ${COMPOSE_NETWORK_NAME}"
 
 # Run the Jekyll builder (from a Docker container) on the provided content repository.
 docker run \
