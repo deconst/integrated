@@ -21,7 +21,7 @@ fi
 
 export PROD_CONTENT_URL=http://${PROD_CONTENT_NAME}:8080/
 export STAGING_CONTENT_URL=http://${STAGING_CONTENT_NAME}:8080/
-export PYVER=$(python --version | awk '{print $2}' | cut -c1)
+export PYVER=$(python -c "import sys; print(sys.version_info.major)")
 
 apikey() {
   local KEYNAME="${1:-}"
