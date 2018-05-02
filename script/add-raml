@@ -61,7 +61,6 @@ docker run \
   -e VERBOSE=${VERBOSE:-} \
   -e CONTENT_ROOT=${1} \
   -v ${CONTAINER_ROOT}:${CONTAINER_ROOT} \
-  # raml-preparer:dev
   docker.io/edwardjrp/raml-preparer
 
 # Run the submitter on the generated output.
