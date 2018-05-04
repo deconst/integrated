@@ -21,7 +21,7 @@ if [ -z "${1:-}" ]; then
 Usage: script/add-raml [--stage|-s] <path>
 
  --stage|-s - Submit content to the staging endpoint.
- path - Path to a Raml file.
+ path - Path to a RAML content repository.
 
 EOM
   exit 1
@@ -52,7 +52,7 @@ echo "CONTAINER_ROOT | ${CONTAINER_ROOT}"
 echo "CONTENT_URL | ${CONTENT_URL}"
 echo "COMPOSE_NETWORK_NAME | ${COMPOSE_NETWORK_NAME}"
 
-# Run the Jekyll builder (from a Docker container) on the provided content repository.
+# Run the Raml builder (from a Docker container) on the provided content repository.
 docker run \
   --rm=true \
   -e ENVELOPE_DIR=${CONTAINER_ROOT}/_site/deconst-envelopes \
