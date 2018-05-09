@@ -21,6 +21,7 @@ fi
 
 export PROD_CONTENT_URL=http://${PROD_CONTENT_NAME}:8080/
 export STAGING_CONTENT_URL=http://${STAGING_CONTENT_NAME}:8080/
+export PYVER=$(python -c "import sys; print(sys.version_info.major)")
 
 apikey() {
   local KEYNAME="${1:-}"
@@ -36,11 +37,24 @@ apikey() {
   local ENDPOINT="http://${DECONST_HOST}:9000"
   [ -n "${STAGING}" ] && ENDPOINT="http://${DECONST_HOST}:9001"
 
-  export APIKEY=$(curl -s \
-    -X POST \
-    -H "Authorization: deconst ${ADMIN_APIKEY}" \
-    ${ENDPOINT}/keys?named=${KEYNAME} |
-    python -c 'import sys, json; print json.load(sys.stdin)["apikey"]')
+  # Add visibility to endpoints being called
+  echo "ENDPOINT | ${ENDPOINT}"
+  echo "PROD_CONTENT_URL | ${PROD_CONTENT_URL}"
+  echo "PYTHON VERSION | `python --version`"
+
+  if  [ "$PYVER" -eq "3" ]; then
+    export APIKEY=$(curl -s \
+      -X POST \
+      -H "Authorization: deconst ${ADMIN_APIKEY}" \
+      ${ENDPOINT}/keys?named=${KEYNAME} |
+      python -c 'import sys, json; print(json.loads(sys.stdin.readline())["apikey"])')
+  else
+    export APIKEY=$(curl -s \
+      -X POST \
+      -H "Authorization: deconst ${ADMIN_APIKEY}" \
+      ${ENDPOINT}/keys?named=${KEYNAME} |
+      python -c 'import sys, json; print json.load(sys.stdin)["apikey"]')
+  fi
 
   if [ -z "${APIKEY:-}" ]; then
     echo "Unable to issue an API key." >&2
