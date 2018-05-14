@@ -1,0 +1,18 @@
+version: '2'
+services:
+  mongo:
+    image: mongo:2.6
+  elasticsearch:
+    image: elasticsearch:1.7
+  content:
+    build:
+      context: ../content-service
+  staging_content:
+    build:
+      context: ../content-service
+  presenter:
+    build:
+      context: ../presenter
+  staging_presenter:
+    build:
+      context: ../presenter
