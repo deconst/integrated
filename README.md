@@ -1,50 +1,95 @@
 # Deconst, Integrated
 
-[`docker-compose`](https://docs.docker.com/compose/) configuration that instantiates a single "pod" of Deconst services, with all of the debug settings cranked up to full. It's useful for:
+Deconst Integrated is a
+[`docker-compose`](https://docs.docker.com/compose/) configuration
+that instantiates a single collection of Deconst services, with all of
+the debug settings cranked up to full. It's useful for:
 
- * Integration testing of Deconst components, before you commit to master and :shipit:
- * Previewing local content or control repository changes when the [deconst client](https://github.com/deconst/client) is busted
+ * Integration testing of Deconst components, before you commit to
+   master and :shipit:
+ * Previewing local content or control repository changes
 
-### Prerequisites
+## Prerequisites
+### OSX
 
- * Install a recent version of [Docker](https://docs.docker.com/installation/#installation) for your platform.
- 
-If you are on MacOS, stop here and go to [Getting Started](#getting-started).
- 
-If you are on Windows or Linux, continue:
- 
- * Install [docker-compose](https://docs.docker.com/compose/install/). In addition to the `curl` command they list, you can also install it from [homebrew](http://brew.sh/) or [pip](https://pypi.python.org/pypi/docker-compose/1.3.0rc1).
+ * Install a recent version of
+   [Docker](https://docs.docker.com/installation/#installation)
 
-Make sure that docker-machine is create and running first.
 
+### Windows or Linux
+
+ 1. Install [docker-compose](https://docs.docker.com/compose/install/)
+ 1. Create a `docker-machine dev` instance:
+    ```bash
+    docker-machine create --driver virtualbox dev
+    ```
+ 1. Run `eval $(docker-machine env default)` in each shell that you'll
+    use to interact with Docker.
+
+
+## Edit the env file
+
+Clone this Deconst Integrated repository and change to the directory
+where you cloned the repo. Customize your credentials and other
+settings in the `env` file. Setting the variables correctly require
+knowing your Rackspace Cloud account info and also where you intend to
+clone the control repo.
+
+   1. Copy the example file to `env`:
+      ```bash
+      $ cp env.example env
+      ```
+   1. Edit the `env` file in a text editor and change it as
+      appropriate for your environment.
+   1. Create a random API key. For example:
+      ```bash
+      $ hexdump -v -e '1/1 "%.2x"' -n 40 /dev/random
+      50d1606d4bd6bd1a5f2adefdcae603deff9b012a164cb8bf0b68caf3638d8e868
+      ```
+   1. Paste the key between the quotes on this line in the
+      `env` file:
+      ```bash
+      # The content service's administrative API Key. Used for write actions.
+      # Set this to something arbitrary and "random". While you're running locally it doesn't need to
+      # be anything particularly difficult.
+      export ADMIN_APIKEY="50d1606d4bd6bd1a5f2adefdcae603deff9b012a164cb8bf0b68caf3638d8e868""
+      ```
+   1. Set the domain name of the published documentation site:
+      ```bash
+      # Set this to the domain name of the site you're interested in.
+      export PRESENTED_URL_DOMAIN=deconst.horse
+      ```
+   1. Set the location of your `nexus-control` repository. For
+      example:
+      ```bash
+      # Set this to a path to a control repository on your local
+      # machine to preview local changes to a control repository.
+      unset CONTROL_REPO_HOST_PATH
+      export CONTROL_REPO_HOST_PATH="/Users/writer1/nexus-control"
+      ```
+   1. Set _presenter_ developer mode to true:
+      ```bash
+      # "true" or "false", whether the presenter should load assets directly
+      # from the control repo, or via the assets container export
+      PRESENTER_DEVMODE=true
+      ```
+
+## Start integrated services
+
+Launch the services:
 ```bash
-docker-machine create --driver virtualbox dev
+script/up
 ```
 
-Run `eval $(docker-machine env default)` in each shell you'll use to interact with Docker.
-
-### Getting Started
-
-Clone this repository and `cd` into the directory where you cloned the repo. Then:
-
-1. Customize your credentials and other settings. The `env`
-   settings require knowing your Rackspace Cloud account info
-   and also where you intend to clone the control repo, for example.
-    ```bash
-    cp env.example env
-    ${EDITOR} env
-    ```
-1. Launch the services.
-   ```bash
-   script/up
-   ```
-
-`script/up` accepts any parameters that `docker-compose up` does. Notably, you can use `script/up -d` to launch services in the background.
+The `script/up` command accepts any parameters that `docker-compose
+up` does. Notably, you can use `script/up -d` to launch services in
+the background.
 
 
-### Manual Alternative
+### Option: Run the Docker containers manually
 
-If you prefer, you can manually run each docker container with:
+As an alternative to the `up` script, you can manually run each Docker
+container, as follows:
 
 ```bash
 # generate an admin API key for the content service
@@ -87,7 +132,9 @@ docker run -d -p 80:8080 \
 
 ### Submitting Content
 
-Now the site is running, but you don't have any content submitted, yet. To add some, run the appropriate `script/add-*` script with the path to your clone of a local content repository.
+Now the site is running, but you don't have any content submitted,
+yet. To add some, run the appropriate `script/add-*` script with the
+path to your clone of a local content repository.
 
 ```bash
 script/add-sphinx ~/writing/drc/docs-quickstart
@@ -97,4 +144,7 @@ script/add-jekyll ~/writing/drc/docs-developer-blog
 
 #### Updating content or mappings
 
-If you make changes to the control repo—including content mapping, template routing, redirects, or asset/template content—you will need to restart the _presenter_ so it can pick up these changes. Just run `script/refresh` to restart the presenter.
+If you make changes to the control repo — including content mapping,
+template routing, redirects, or asset/template content — you must
+restart the _presenter_ so it can pick up these changes. Run
+`script/refresh` to restart the presenter.
