@@ -37,15 +37,17 @@ clone the control repo.
 
    1. Copy the example file to `env`:
       ```bash
-      $ cp env.example env
+      cp env.example env
       ```
    1. Edit the `env` file in a text editor and change it as
       appropriate for your environment.
-   1. Create a random API key. For example:
+   1. Since this a local test environment, any API key is fine. To
+      create a random API key, type:
       ```bash
-      $ hexdump -v -e '1/1 "%.2x"' -n 40 /dev/random
+      hexdump -v -e '1/1 "%.2x"' -n 40 /dev/random
       50d1606d4bd6bd1a5f2adefdcae603deff9b012a164cb8bf0b68caf3638d8e868
       ```
+
    1. Paste the key between the quotes on this line in the
       `env` file:
       ```bash
@@ -54,24 +56,20 @@ clone the control repo.
       # be anything particularly difficult.
       export ADMIN_APIKEY="50d1606d4bd6bd1a5f2adefdcae603deff9b012a164cb8bf0b68caf3638d8e868""
       ```
+
    1. Set the domain name of the published documentation site:
       ```bash
       # Set this to the domain name of the site you're interested in.
       export PRESENTED_URL_DOMAIN=deconst.horse
       ```
-   1. Set the location of your `nexus-control` repository. For
-      example:
+
+   1. Set the location of your control repository. For
+      example, for `deconst.horse`:
       ```bash
       # Set this to a path to a control repository on your local
       # machine to preview local changes to a control repository.
       unset CONTROL_REPO_HOST_PATH
-      export CONTROL_REPO_HOST_PATH="/Users/writer1/nexus-control"
-      ```
-   1. Set _presenter_ developer mode to true:
-      ```bash
-      # "true" or "false", whether the presenter should load assets directly
-      # from the control repo, or via the assets container export
-      PRESENTER_DEVMODE=true
+      export CONTROL_REPO_HOST_PATH="/Users/writer1/deconst-docs-control"
       ```
 
 ## Start integrated services
@@ -130,15 +128,20 @@ docker run -d -p 80:8080 \
   presenter:dev script/dev
 ```
 
-### Submitting Content
+### Submitting content
 
 Now the site is running, but you don't have any content submitted,
 yet. To add some, run the appropriate `script/add-*` script with the
 path to your clone of a local content repository.
 
 ```bash
+# add the control repository:
+script/add-assets ~/writing/drc/deconst-docs-control
+
+# add a Sphinx site:
 script/add-sphinx ~/writing/drc/docs-quickstart
 
+# add a Jekyll site:
 script/add-jekyll ~/writing/drc/docs-developer-blog
 ```
 
@@ -148,3 +151,10 @@ If you make changes to the control repo — including content mapping,
 template routing, redirects, or asset/template content — you must
 restart the _presenter_ so it can pick up these changes. Run
 `script/refresh` to restart the presenter.
+
+## Cleaning up
+
+To shut down all containers, type:
+```bash
+docker stop $(docker ps -a -q)
+```
