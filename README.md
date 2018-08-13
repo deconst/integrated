@@ -54,7 +54,7 @@ clone the control repo.
       # The content service's administrative API Key. Used for write actions.
       # Set this to something arbitrary and "random". While you're running locally it doesn't need to
       # be anything particularly difficult.
-      export ADMIN_APIKEY="50d1606d4bd6bd1a5f2adefdcae603deff9b012a164cb8bf0b68caf3638d8e868""
+      export ADMIN_APIKEY=50d1606d4bd6bd1a5f2adefdcae603deff9b012a164cb8bf0b68caf3638d8e868
       ```
 
    1. Set the domain name of the published documentation site:
@@ -122,7 +122,7 @@ docker run -d -p 80:8080 \
   -e CONTROL_REPO_BRANCH=... \
   -e CONTENT_SERVICE_URL=http://content:8080 \
   -e PRESENTED_URL_PROTO=http \
-  -e PRESENTED_URL_DOMAIN=support.rackspace.com \
+  -e PRESENTED_URL_DOMAIN=deconst.horse \
   --link content \
   --name presenter \
   presenter:dev script/dev
@@ -135,6 +135,7 @@ yet. To add some, run the appropriate `script/add-*` script with the
 path to your clone of a local content repository.
 
 ```bash
+# (do this first to render styling)
 # add the control repository:
 script/add-assets ~/writing/drc/deconst-docs-control
 
