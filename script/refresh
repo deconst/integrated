@@ -14,7 +14,7 @@ else
 fi
 
 if ! [[ -x "$(command -v grunt)" ]]; then
-    echo "Error: grunt command not found. Please install it."
+    echo "Error: grunt command not found. Install 'grunt-cli' and retry."
     exit 1
 fi
 
