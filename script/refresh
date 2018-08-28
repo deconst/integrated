@@ -4,9 +4,19 @@ set -euo pipefail
 
 ROOT=$(cd $(dirname $0)/..; pwd)
 
-DOCKER_MACHINE_NAME=${DOCKER_MACHINE_NAME:-dev}
+# Are we using Docker for Mac?
+OSX=$(docker info --format "{{.OperatingSystem}}" | grep -q "Docker for Mac")
+if [[ ${OSX} -eq 0 ]]; then
+    DECONST_IP="127.0.0.1"
+else
+    DOCKER_MACHINE_NAME=${DOCKER_MACHINE_NAME:-dev};
+    DECONST_IP=$(docker-machine ip ${DOCKER_MACHINE_NAME})
+fi
 
-DECONST=$(docker-machine ip ${DOCKER_MACHINE_NAME})
+if ! [[ -x "$(command -v grunt)" ]]; then
+    echo "Error: grunt command not found. Install 'grunt-cli' and retry."
+    exit 1
+fi
 
 [ -f ${ROOT}/env ] || {
   cat <<EOM 1>&2
@@ -16,7 +26,7 @@ Environment variables not found. Please copy and customize the example file:
   \${EDITOR} ${ROOT}/env
 
 EOM
-  exit 1
+    exit 1
 }
 
 source ${ROOT}/env
@@ -24,7 +34,7 @@ source ${ROOT}/env
 if [ -d "${CONTROL_REPO_PATH}/node_modules/grunt-deconst-assets" ]; then
     cd ${CONTROL_REPO_PATH}
     export TRAVIS_PULL_REQUEST=false
-    export CONTENT_STORE_URL=http://${DECONST}:9000
+    export CONTENT_STORE_URL=http://${DECONST_IP}:9000
     export CONTENT_STORE_APIKEY=${ADMIN_APIKEY}
     ${CONTROL_REPO_ASSETS_TASK}
 
