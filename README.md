@@ -1,3 +1,5 @@
+# DEPRECATED. Use https://gitlab.com/deconst-next/integrated
+
 # Deconst, Integrated
 
 Deconst Integrated is a
